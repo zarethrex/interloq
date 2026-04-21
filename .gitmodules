@@ -1,0 +1,6 @@
+[submodule "third_party/fkYAML"]
+	path = third_party/fkYAML
+	url = https://github.com/fktn-k/fkYAML.git
+[submodule "third_party/magic_enum"]
+	path = third_party/magic_enum
+	url = https://github.com/Neargye/magic_enum.git
