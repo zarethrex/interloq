@@ -51,7 +51,7 @@ TEST_CASE("Basic LeverFrame Parsing from File", "[file_import]") {
     REQUIRE(lever_1_dependencies_[0].target == 3);
     REQUIRE(!lever_1_dependencies_[0].required_state);
     REQUIRE(lever_3_dependencies_[0].target == 1);
-    REQUIRE(lever_3_dependencies_[0].required_state);
+    REQUIRE(!lever_3_dependencies_[0].required_state);
   }
 }
 

@@ -1,10 +1,10 @@
-Include(FetchContent)
-FetchContent_Declare(
+include(FetchContent)
+fetchcontent_declare(
   Catch2
   GIT_REPOSITORY https://github.com/catchorg/Catch2.git
-  GIT_TAG        v3.8.1
+  GIT_TAG        v3.14.0
 )
-FetchContent_MakeAvailable(Catch2)
+fetchcontent_makeavailable(Catch2)
 file(GLOB INTERLOQ_TEST_FILES ${CMAKE_CURRENT_SOURCE_DIR}/*.cxx)
 list(APPEND CMAKE_MODULE_PATH ${catch2_SOURCE_DIR}/extras)
 include(Catch)
@@ -21,4 +21,3 @@ foreach( TEST ${INTERLOQ_TEST_FILES} )
     )
     catch_discover_tests(${BINARY_NAME} DISCOVERY_MODE PRE_TEST)
 endforeach()
-

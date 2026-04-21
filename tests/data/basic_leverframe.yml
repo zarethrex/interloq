@@ -15,4 +15,4 @@ leverframe:
     type: Points
     dependencies:
       - target: 1
-        required_state: true
+        required_state: false

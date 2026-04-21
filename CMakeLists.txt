@@ -11,7 +11,10 @@ project(
 file(GLOB INTERLOQ_SRC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cxx)
 set(INTERLOQ_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
 set(INTERLOQ_FKYAML_DIR ${CMAKE_CURRENT_SOURCE_DIR}/third_party/fkYAML/include)
-set(INTERLOQ_MAGIC_ENUM_DIR ${CMAKE_CURRENT_SOURCE_DIR}/third_party/magic_enum/include)
+set(
+    INTERLOQ_MAGIC_ENUM_DIR
+    ${CMAKE_CURRENT_SOURCE_DIR}/third_party/magic_enum/include
+)
 
 option(INTERLOQ_BUILD_TESTS "Build Unit Tests" ON)
 
