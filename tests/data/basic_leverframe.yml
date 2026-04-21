@@ -1,0 +1,18 @@
+---
+name: Basic Example
+leverframe:
+  - id: 1
+    name: Up Main Home
+    type: StopSignal
+    dependencies:
+      - target: 3
+        required_state: false
+  - id: 2
+    name: Down Main Home
+    type: StopSignal
+  - id: 3
+    name: Up Junction
+    type: Points
+    dependencies:
+      - target: 1
+        required_state: true
