@@ -24,7 +24,7 @@ jobs:
           - macos-latest
           - windows-latest
           - ubuntu-latest
-    runs-on: "{{ matrix.os }}"
+    runs-on: "${{ matrix.os }}"
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v6
