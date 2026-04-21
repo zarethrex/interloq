@@ -24,6 +24,7 @@ jobs:
           - macos-latest
           - windows-latest
           - ubuntu-latest
+      fail-fast: false
     runs-on: "${{ matrix.os }}"
     steps:
       - name: Checkout Repository
@@ -37,11 +38,15 @@ jobs:
         with:
           version: "1.13.2"
       - name: Setup Clang
+        if: matrix.os != 'macos-latest'
         id: clang_setup
         uses: egor-tensin/setup-clang@v2
         with:
           version: latest
           platform: x64
+      - name: Setup Clang
+        if: matrix.os == 'macos-latest'
+        run: brew install llvm
       - name: Build Project
         env:
           CXX: ${{ steps.clang_setup.outputs.clangxx }}
