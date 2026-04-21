@@ -16,7 +16,7 @@ concurrency:
 
 jobs:
   build_test:
-    name: Build & Test ({{ matrix.os }})
+    name: Build & Test (${{ matrix.os }})
     timeout-minutes: 10
     strategy:
       matrix:
