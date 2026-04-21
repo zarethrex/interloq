@@ -1,0 +1,61 @@
+---
+name: Interloq
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build_test:
+    name: Build & Test ({{ matrix.os }})
+    timeout-minutes: 10
+    strategy:
+      matrix:
+        os:
+          - macos-latest
+          - windows-latest
+          - ubuntu-latest
+    runs-on: "{{ matrix.os }}"
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v6
+        with:
+          submodules: true
+      - name: Setup CMake
+        uses: jwlawson/actions-setup-cmake@v2
+      - name: Setup Ninja
+        uses: ashutoshvarma/setup-ninja@master
+        with:
+          version: "1.13.2"
+      - name: Setup Clang
+        id: clang_setup
+        uses: egor-tensin/setup-clang@v2
+        with:
+          version: latest
+          platform: x64
+      - name: Build Project
+        env:
+          CXX: ${{ steps.clang_setup.outputs.clangxx }}
+          CC: ${{ steps.clang_setup.outputs.clang }}
+        run: |
+          cmake -Bbuild -G Ninja -DINTERLOQ_BUILD_TESTS=ON
+          cmake --build build
+      - name: Run Unit Tests
+        run: ctest --test-dir build
+  lint:
+    name: Run Git Hooks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: j178/prek-action@v2
+        with:
+          extra-args: "--all-files --color=always --show-diff-on-failure"
