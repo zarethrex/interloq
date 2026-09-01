@@ -24,20 +24,28 @@ void interloq::from_node(const fkyaml::node &n, LeverDefinition &lever) {
   lever.type = magic_enum::enum_cast<LeverType>(lever_type_).value();
   lever.id = n["id"].get_value<unsigned int>();
   lever.name = n["name"].get_value<std::string>();
-  if (!n.contains("dependencies")) {
-    lever.dependencies = std::nullopt;
-  } else {
-    lever.dependencies =
+  if (n.contains("dependencies")) {
+    auto dependencies =
         n["dependencies"].get_value<std::vector<LeverDependency>>();
+    for (const auto &dependency : dependencies) {
+      lever.dependencies[dependency.target] = dependency;
+    }
   }
 }
 void interloq::to_node(fkyaml::node &n, const LeverDependency &dependency) {
   n = {{"target", dependency.target},
        {"required_state", dependency.required_state}};
+  if (!dependency.alt_choices.empty()) {
+    n["alt_choices"] = dependency.alt_choices;
+  }
 }
 void interloq::from_node(const fkyaml::node &n, LeverDependency &dependency) {
   dependency.target = n["target"].get_value<unsigned int>();
   dependency.required_state = n["required_state"].get_value<bool>();
+  if (n.contains("alt_choices")) {
+    dependency.alt_choices =
+        n["alt_choices"].get_value<std::vector<unsigned int>>();
+  }
 }
 void interloq::to_node(fkyaml::node &n, const LeverDefinition &definition) {
   std::string sig_type_str_{magic_enum::enum_name(definition.type)};
@@ -47,8 +55,12 @@ void interloq::to_node(fkyaml::node &n, const LeverDefinition &definition) {
       {"name", definition.name},
   };
 
-  if (definition.dependencies.has_value()) {
-    n["dependencies"] = definition.dependencies.value();
+  if (!definition.dependencies.empty()) {
+    std::vector<LeverDependency> map_values_;
+    for (const auto &pair : definition.dependencies) {
+      map_values_.push_back(pair.second);
+    }
+    n["dependencies"] = map_values_;
   }
 }
 
