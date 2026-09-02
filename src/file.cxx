@@ -28,7 +28,7 @@ void interloq::from_node(const fkyaml::node &n, LeverDefinition &lever) {
     auto dependencies =
         n["dependencies"].get_value<std::vector<LeverDependency>>();
     for (const auto &dependency : dependencies) {
-      lever.dependencies[dependency.target] = dependency;
+      lever.dependencies.insert({dependency.target, dependency});
     }
   }
 }

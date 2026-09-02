@@ -36,26 +36,20 @@ struct InterlockDefinition {
   static InterlockDefinition yaml_load(const std::filesystem::path &input_file);
   friend std::ostream &operator<<(std::ostream &os,
                                   const InterlockDefinition &inter) {
-    os << "name: " << inter.name << "\n";
-    os << "interlocking: \n";
-    os << "\n";
+    os << "name: " << inter.name << "\n"
+       << "interlocking: \n\n";
     for (const auto &[id, lever] : inter.leverframe) {
-      os << id << ":\n";
-      os << "  "
-         << "name: " << lever.name << "\n";
-      os << "  "
-         << "dependencies: \n";
-      for (const auto &[id, dependency] : lever.dependencies) {
-        os << "    " << id << ":\n";
-        os << "      "
-           << "required_state: "
-           << (dependency.required_state ? "true" : "false") << "\n";
-        os << "      "
-           << "target: " << dependency.target << "\n";
-        os << "      "
-           << "alt_choices:\n";
+      os << id << ":\n"
+         << "  name: " << lever.name << "\n"
+         << "  dependencies: \n";
+      for (const auto &[dep_id, dependency] : lever.dependencies) {
+        os << "    " << dep_id << ":\n"
+           << "      required_state: "
+           << (dependency.required_state ? "true" : "false") << "\n"
+           << "      target: " << dependency.target << "\n"
+           << "      alt_choices:\n";
         for (const auto &alt : dependency.alt_choices) {
-          os << "        -" << alt << "\n";
+          os << "        - " << alt << "\n";
         }
       }
     }

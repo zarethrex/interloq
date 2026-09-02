@@ -5,12 +5,10 @@
 #include <iostream>
 #include <map>
 #include <stdexcept>
-
-#include "file.hxx"
+#include <unordered_set>
 
 namespace interloq {
 using InterlockSetting = std::map<unsigned int, bool>;
-using InterlockPreset = std::map<bool, InterlockSetting>;
 
 class Interlocking {
 private:
