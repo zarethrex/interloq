@@ -1,14 +1,5 @@
 #include "interloq/interlock.hxx"
 
-interloq::Interlocking
-interloq::Interlocking::from_node(const fkyaml::node &data_node) {
-  InterlockDefinition output_;
-  interloq::from_node(data_node, output_);
-  for (const auto &[lever, _] : logic_table_.leverframe) {
-    lever_states_.insert({lever, false});
-  }
-}
-
 bool interloq::Interlocking::move_lever(unsigned int id, bool state) {
   if (!lever_states_.contains(id)) {
     throw std::invalid_argument("Lever frame contains no lever of ID '" +
