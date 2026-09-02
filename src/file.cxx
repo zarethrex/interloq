@@ -64,11 +64,16 @@ void interloq::to_node(fkyaml::node &n, const LeverDefinition &definition) {
   }
 }
 
+interloq::InterlockDefinition
+interloq::InterlockDefinition::from_node(const fkyaml::node &data_node) {
+  InterlockDefinition output_;
+  interloq::from_node(data_node, output_);
+  return output_;
+}
+
 interloq::InterlockDefinition interloq::InterlockDefinition::yaml_load(
     const std::filesystem::path &input_file) {
   std::ifstream infile_{input_file};
   const auto input_ = fkyaml::node::deserialize(infile_);
-  InterlockDefinition output_;
-  interloq::from_node(input_, output_);
-  return output_;
+  return InterlockDefinition::from_node(input_);
 }

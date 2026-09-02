@@ -16,6 +16,12 @@ private:
   InterlockSetting lever_states_;
 
 public:
+  Interlocking(const fkyaml::node &data_node)
+      : logic_table_(InterlockDefinition::from_node(data_node)) {
+    for (const auto &[lever, _] : logic_table_.leverframe) {
+      lever_states_.insert({lever, false});
+    }
+  }
   Interlocking(const std::filesystem::path &def_file)
       : logic_table_(InterlockDefinition::yaml_load(def_file)) {
     for (const auto &[lever, _] : logic_table_.leverframe) {

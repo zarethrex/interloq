@@ -33,6 +33,7 @@ struct LeverDefinition {
 struct InterlockDefinition {
   std::string name;
   std::map<unsigned int, LeverDefinition> leverframe;
+  static InterlockDefinition from_node(const fkyaml::node &data_node);
   static InterlockDefinition yaml_load(const std::filesystem::path &input_file);
   friend std::ostream &operator<<(std::ostream &os,
                                   const InterlockDefinition &inter) {
