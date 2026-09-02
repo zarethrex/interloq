@@ -19,7 +19,7 @@ set(
 option(INTERLOQ_BUILD_TESTS "Build Unit Tests" ON)
 
 add_library(${PROJECT_NAME} ${INTERLOQ_SRC_FILES})
-target_include_directories(${PROJECT_NAME} PRIVATE ${INTERLOQ_INCLUDE_DIR})
+target_include_directories(${PROJECT_NAME} PUBLIC ${INTERLOQ_INCLUDE_DIR})
 target_include_directories(${PROJECT_NAME} PUBLIC ${INTERLOQ_FKYAML_DIR})
 target_include_directories(${PROJECT_NAME} PUBLIC ${INTERLOQ_MAGIC_ENUM_DIR})
 
