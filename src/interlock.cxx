@@ -1,10 +1,11 @@
 #include "interloq/interlock.hxx"
 
-bool interloq::Interlocking::move_lever(unsigned int id, bool state) {
+bool interloq::Interlocking::lever_locked(const unsigned int id) const {
   if (!lever_states_.contains(id)) {
     throw std::invalid_argument("Lever frame contains no lever of ID '" +
                                 std::to_string(id) + "'");
   }
+  bool locked_{false};
   const LeverDefinition &entry_{logic_table_.leverframe.at(id)};
 
   std::unordered_set<unsigned int> processed_;
@@ -13,12 +14,12 @@ bool interloq::Interlocking::move_lever(unsigned int id, bool state) {
     if (processed_.contains(target)) {
       continue;
     }
-    bool dependency_passed_{false};
+
+    bool dependency_passed_{true};
 
     // Check if target lever has the required state
-    if (lever_states_.at(target) == dependency.required_state) {
-      dependency_passed_ = true;
-    } else {
+    if (lever_states_.at(target) != dependency.required_state) {
+      dependency_passed_ = false;
       // Check alternative choices
       for (const unsigned int alt_id : dependency.alt_choices) {
         if (!entry_.dependencies.contains(alt_id)) {
@@ -32,6 +33,7 @@ bool interloq::Interlocking::move_lever(unsigned int id, bool state) {
           break;
         }
       }
+      locked_ = !dependency_passed_;
     }
 
     // Mark all checked levers as processed to avoid duplicate checks
@@ -40,10 +42,16 @@ bool interloq::Interlocking::move_lever(unsigned int id, bool state) {
                       dependency.alt_choices.end());
 
     if (!dependency_passed_) {
-      return false;
+      return locked_;
     }
   }
-  lever_states_[id] = state;
+  return locked_;
+}
 
-  return true;
+bool interloq::Interlocking::move_lever(unsigned int id, bool state) {
+  if (!lever_locked(id)) {
+    lever_states_[id] = state;
+    return true;
+  }
+  return false;
 }

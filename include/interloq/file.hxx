@@ -2,14 +2,18 @@
 
 #include "fkYAML/node.hpp"
 #include <filesystem>
+#include <format>
 #include <fstream>
 #include <magic_enum/magic_enum.hpp>
 #include <optional>
 #include <stdexcept>
 #include <string>
+#include <string_view>
 #include <vector>
 
 namespace interloq {
+constexpr std::string_view INTERLOCK_ELEMENT_KEYS[] = {"id", "type", "name"};
+
 enum class LeverType {
   StopSignal,
   DistantSignal,

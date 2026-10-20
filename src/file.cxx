@@ -20,6 +20,16 @@ void interloq::from_node(const fkyaml::node &n,
   }
 }
 void interloq::from_node(const fkyaml::node &n, LeverDefinition &lever) {
+  for (const auto key : INTERLOCK_ELEMENT_KEYS) {
+    if (!n.contains(key) || n[key].is_null()) {
+      std::string id_{""};
+      if (n.contains("id") && !n["id"].is_null()) {
+        id_ += "[" + std::to_string(n["id"].get_value<int>()) + "] ";
+      }
+      throw std::runtime_error(
+          std::format("{}Expected '{}' in element to have value.", id_, key));
+    }
+  }
   const std::string lever_type_{n["type"].get_value<std::string>()};
   lever.type = magic_enum::enum_cast<LeverType>(lever_type_).value();
   lever.id = n["id"].get_value<unsigned int>();
@@ -73,7 +83,18 @@ interloq::InterlockDefinition::from_node(const fkyaml::node &data_node) {
 
 interloq::InterlockDefinition interloq::InterlockDefinition::yaml_load(
     const std::filesystem::path &input_file) {
+  if (!std::filesystem::exists(input_file)) {
+    throw std::invalid_argument("File '" + input_file.string() +
+                                "' does not exist.");
+  }
+  if (std::filesystem::file_size(input_file) == 0) {
+    throw std::runtime_error("Invalid interlocking file '" +
+                             input_file.string() + "', file is empty.");
+  }
   std::ifstream infile_{input_file};
+  if (!infile_) {
+    throw std::runtime_error("Failed to open '" + input_file.string() + "'.");
+  }
   const auto input_ = fkyaml::node::deserialize(infile_);
   return InterlockDefinition::from_node(input_);
 }

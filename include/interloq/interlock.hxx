@@ -28,6 +28,7 @@ public:
       lever_states_.insert({lever, false});
     }
   }
+  bool lever_locked(const unsigned int id) const;
   bool move_lever(const unsigned int id, bool state);
   inline bool get_lever_state(unsigned int id) const {
     if (!lever_states_.contains(id)) {
